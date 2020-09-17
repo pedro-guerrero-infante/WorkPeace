@@ -19,9 +19,11 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
+import com.google.firebase.database.ValueEventListener;
 
 
 public class Registro extends AppCompatActivity {
@@ -30,7 +32,7 @@ public class Registro extends AppCompatActivity {
     TextInputLayout clave;
     Button btnRegistrarse;
     Button btnLogin;
-
+    long maxId = 0;
     FirebaseDatabase ruta;
     DatabaseReference referencia;
     FirebaseAuth autenticacion;
@@ -45,12 +47,26 @@ public class Registro extends AppCompatActivity {
         clave = findViewById(R.id.claveRegistro);
         btnRegistrarse = findViewById(R.id.btnRegistro);
         autenticacion = FirebaseAuth.getInstance();
+        ruta = FirebaseDatabase.getInstance();
+        referencia = ruta.getReference("Usuarios");
+
+        referencia.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    maxId =(dataSnapshot.getChildrenCount());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         btnRegistrarse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ruta = FirebaseDatabase.getInstance();
-                referencia = ruta.getReference("Usuarios");
                 String nombres =nombre.getEditText().getText().toString();
                 String mail =email.getEditText().getText().toString();
                 String contrasenia =clave.getEditText().getText().toString();
@@ -99,7 +115,7 @@ public class Registro extends AppCompatActivity {
 
 
                 UsuariosAux aux = new UsuariosAux(nombres,mail,contrasenia);
-                referencia.child(nombres).setValue(aux);
+                referencia.child(String.valueOf(maxId+1)).setValue(aux);
                 Intent i = new Intent(Registro.this,Perfil.class);
                 startActivity(i);
 
@@ -125,3 +141,4 @@ public class Registro extends AppCompatActivity {
 
     }
 }
+

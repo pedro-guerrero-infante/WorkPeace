@@ -53,10 +53,10 @@ public class Login extends AppCompatActivity {
                                     Toast.makeText(Login.this,"Bienvenido de vuelta",Toast.LENGTH_SHORT).show();
                                 }
                                 else if(task.getException() instanceof  FirebaseAuthUserCollisionException){
-                                        Toast.makeText(Login.this,"Este usuario ya existe",Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(Login.this,"Este usuario ya existe....",Toast.LENGTH_SHORT).show();
                                     }
                                 else{
-                                    Toast.makeText(Login.this,"PAILAS MI PERROO",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Login.this,"No se puedo iniciar la sesión....",Toast.LENGTH_SHORT).show();
 
                                 }
 
@@ -68,12 +68,6 @@ public class Login extends AppCompatActivity {
                 startActivity(sig);
             }
         });
-
-
-
-
-
-
 
         //CAMBIAR A PANTALLA REGISTRO
         btnRegistro.setOnClickListener(new View.OnClickListener() {
